@@ -177,6 +177,7 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 			fmt.Println(validator.String())
 			fmt.Println(newPower)
 			fmt.Println(old.Value)
+			fmt.Println(found)
 			updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
 
 			k.SetLastValidatorPower(ctx, valAddr, newPower)
