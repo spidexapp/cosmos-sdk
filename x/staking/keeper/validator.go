@@ -101,14 +101,37 @@ func (k Keeper) SetNewValidatorByPowerIndex(ctx sdk.Context, validator types.Val
 func (k Keeper) AddValidatorTokensAndShares(ctx sdk.Context, validator types.Validator,
 	tokensToAdd math.Int,
 ) (valOut types.Validator, addedShares sdk.Dec) {
-	fmt.Println("delete")
-	fmt.Println(validator)
+
+	fmt.Println("before")
+	iterator := k.ValidatorsPowerStoreIterator(ctx)
+	defer iterator.Close()
+	for count := 0; iterator.Valid() && count < int(100); iterator.Next() {
+		valAddr := sdk.ValAddress(iterator.Value())
+		validato := k.mustGetValidator(ctx, valAddr)
+		fmt.Println(validato)
+	}
+
 	k.DeleteValidatorByPowerIndex(ctx, validator)
+
+	fmt.Println("deleted")
+	iterator2 := k.ValidatorsPowerStoreIterator(ctx)
+	defer iterator2.Close()
+	for count := 0; iterator2.Valid() && count < int(100); iterator2.Next() {
+		valAddr := sdk.ValAddress(iterator2.Value())
+		validato := k.mustGetValidator(ctx, valAddr)
+		fmt.Println(validato)
+	}
 	validator, addedShares = validator.AddTokensFromDel(tokensToAdd)
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByPowerIndex(ctx, validator)
-	fmt.Println("set")
-	fmt.Println(validator)
+	fmt.Println("after set")
+	iterator3 := k.ValidatorsPowerStoreIterator(ctx)
+	defer iterator3.Close()
+	for count := 0; iterator3.Valid() && count < int(100); iterator3.Next() {
+		valAddr := sdk.ValAddress(iterator3.Value())
+		validato := k.mustGetValidator(ctx, valAddr)
+		fmt.Println(validato)
+	}
 	return validator, addedShares
 }
 

@@ -214,15 +214,6 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 	fmt.Println(msg.ValidatorAddress)
 	fmt.Println(msg.Amount.String())
 
-	iterator := k.ValidatorsPowerStoreIterator(ctx)
-	defer iterator.Close()
-
-	for count := 0; iterator.Valid() && count < int(100); iterator.Next() {
-		valAddr := sdk.ValAddress(iterator.Value())
-		validator := k.mustGetValidator(ctx, valAddr)
-		fmt.Println(validator)
-	}
-
 	valAddr, valErr := sdk.ValAddressFromBech32(msg.ValidatorAddress)
 	if valErr != nil {
 		return nil, valErr
