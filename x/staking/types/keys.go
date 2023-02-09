@@ -86,6 +86,7 @@ func GetValidatorsByPowerIndexKey(validator Validator, powerReduction math.Int) 
 
 	consensusPower := sdk.TokensToConsensusPower(validator.Tokens, powerReduction)
 	fmt.Println(validator.Tokens.String())
+	fmt.Println(powerReduction)
 	fmt.Print(validator.OperatorAddress + ": ")
 	fmt.Println(consensusPower)
 	consensusPowerBytes := make([]byte, 8)
