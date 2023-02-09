@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"cosmossdk.io/math"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
 	"github.com/cosmos/cosmos-sdk/types/kv"
@@ -84,6 +85,9 @@ func GetValidatorsByPowerIndexKey(validator Validator, powerReduction math.Int) 
 	// NOTE the larger values are of higher value
 
 	consensusPower := sdk.TokensToConsensusPower(validator.Tokens, powerReduction)
+	fmt.Println(validator.Tokens.String())
+	fmt.Print(validator.OperatorAddress + ": ")
+	fmt.Println(consensusPower)
 	consensusPowerBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(consensusPowerBytes, uint64(consensusPower))
 

@@ -170,12 +170,12 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower})
 
 		old := &gogotypes.Int64Value{}
-		k.cdc.MustUnmarshal(newPowerBytes, old)
+		k.cdc.MustUnmarshal(oldPowerBytes, old)
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
 			fmt.Println("maxValidators:")
 			fmt.Println(iterator.Key())
-			fmt.Println(iterator.Value())
+			fmt.Println(valAddr)
 			fmt.Println(oldPowerBytes)
 			fmt.Println(newPowerBytes)
 			fmt.Println(newPower)
