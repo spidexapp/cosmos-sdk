@@ -182,16 +182,16 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 			fmt.Println(newPower)
 			fmt.Println(old.Value)
 			fmt.Println(found)
-			store := ctx.KVStore(k.storeKey)
-			store.Delete(iterator.Key())
-			//if found {
-			//
-			//
-			//} else {
-			//	updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
-			//}
 
-			k.SetLastValidatorPower(ctx, valAddr, newPower)
+			if found {
+				store := ctx.KVStore(k.storeKey)
+				store.Delete(iterator.Key())
+			} else {
+				updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
+				k.SetLastValidatorPower(ctx, valAddr, newPower)
+			}
+
+			//k.SetLastValidatorPower(ctx, valAddr, newPower)
 		}
 
 		delete(last, valAddrStr)
