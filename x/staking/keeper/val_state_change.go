@@ -174,7 +174,10 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
 			fmt.Println("maxValidators:")
-			fmt.Println(validator.String())
+			fmt.Println(iterator.Key())
+			fmt.Println(iterator.Value())
+			fmt.Println(oldPowerBytes)
+			fmt.Println(newPowerBytes)
 			fmt.Println(newPower)
 			fmt.Println(old.Value)
 			fmt.Println(found)
