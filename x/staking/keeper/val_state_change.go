@@ -124,7 +124,6 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 	iterator := k.ValidatorsPowerStoreIterator(ctx)
 	defer iterator.Close()
 
-	fmt.Println("int(maxValidators)", maxValidators)
 	for count := 0; iterator.Valid() && count < int(maxValidators); iterator.Next() {
 		// everything that is iterated in this loop is becoming or already a
 		// part of the bonded validator set
@@ -170,10 +169,14 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		newPower := validator.ConsensusPower(powerReduction)
 		newPowerBytes := k.cdc.MustMarshal(&gogotypes.Int64Value{Value: newPower})
 
+		old := &gogotypes.Int64Value{}
+		k.cdc.Unmarshal(newPowerBytes, old)
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
 			fmt.Println("maxValidators:")
 			fmt.Println(validator.String())
+			fmt.Println(newPower)
+			fmt.Println(old)
 			updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
 
 			k.SetLastValidatorPower(ctx, valAddr, newPower)

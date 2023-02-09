@@ -212,7 +212,9 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 	fmt.Print("msg:")
 	fmt.Println(msg.DelegatorAddress)
 	fmt.Println(msg.ValidatorAddress)
-	fmt.Print(msg.Amount.String())
+	fmt.Println(msg.Amount.String())
+	fmt.Println(k.GetAllValidators(ctx))
+
 	valAddr, valErr := sdk.ValAddressFromBech32(msg.ValidatorAddress)
 	if valErr != nil {
 		return nil, valErr
@@ -265,7 +267,7 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 			sdk.NewAttribute(sdk.AttributeKeySender, msg.DelegatorAddress),
 		),
 	})
-
+	fmt.Println(k.GetAllValidators(ctx))
 	return &types.MsgDelegateResponse{}, nil
 }
 
