@@ -213,7 +213,15 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 	fmt.Println(msg.DelegatorAddress)
 	fmt.Println(msg.ValidatorAddress)
 	fmt.Println(msg.Amount.String())
-	fmt.Println(k.GetAllValidators(ctx))
+
+	iterator := k.ValidatorsPowerStoreIterator(ctx)
+	defer iterator.Close()
+
+	for count := 0; iterator.Valid() && count < int(100); iterator.Next() {
+		valAddr := sdk.ValAddress(iterator.Value())
+		validator := k.mustGetValidator(ctx, valAddr)
+		fmt.Println(validator)
+	}
 
 	valAddr, valErr := sdk.ValAddressFromBech32(msg.ValidatorAddress)
 	if valErr != nil {
@@ -254,6 +262,11 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 		}()
 	}
 
+	for count := 0; iterator.Valid() && count < int(100); iterator.Next() {
+		valAddr := sdk.ValAddress(iterator.Value())
+		validator := k.mustGetValidator(ctx, valAddr)
+		fmt.Println(validator)
+	}
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeDelegate,
@@ -267,7 +280,7 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 			sdk.NewAttribute(sdk.AttributeKeySender, msg.DelegatorAddress),
 		),
 	})
-	fmt.Println(k.GetAllValidators(ctx))
+
 	return &types.MsgDelegateResponse{}, nil
 }
 
