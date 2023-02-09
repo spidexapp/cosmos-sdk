@@ -129,6 +129,9 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		// part of the bonded validator set
 		valAddr := sdk.ValAddress(iterator.Value())
 		validator := k.mustGetValidator(ctx, valAddr)
+		fmt.Println("maxValidators:")
+		fmt.Println(iterator.Key())
+		fmt.Println(valAddr)
 
 		if validator.Jailed {
 			panic("should never retrieve a jailed validator from the power store")
@@ -173,20 +176,20 @@ func (k Keeper) ApplyAndReturnValidatorSetUpdates(ctx sdk.Context) (updates []ab
 		k.cdc.MustUnmarshal(oldPowerBytes, old)
 		// update the validator set if power has changed
 		if !found || !bytes.Equal(oldPowerBytes, newPowerBytes) {
-			fmt.Println("maxValidators:")
-			fmt.Println(iterator.Key())
-			fmt.Println(valAddr)
+			fmt.Println("found:")
 			fmt.Println(oldPowerBytes)
 			fmt.Println(newPowerBytes)
 			fmt.Println(newPower)
 			fmt.Println(old.Value)
 			fmt.Println(found)
-			if found {
-				store := ctx.KVStore(k.storeKey)
-				store.Delete(iterator.Key())
-			} else {
-				updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
-			}
+			store := ctx.KVStore(k.storeKey)
+			store.Delete(iterator.Key())
+			//if found {
+			//
+			//
+			//} else {
+			//	updates = append(updates, validator.ABCIValidatorUpdate(powerReduction))
+			//}
 
 			k.SetLastValidatorPower(ctx, valAddr, newPower)
 		}
