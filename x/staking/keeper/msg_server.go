@@ -262,8 +262,11 @@ func (k msgServer) Delegate(goCtx context.Context, msg *types.MsgDelegate) (*typ
 		}()
 	}
 
-	for count := 0; iterator.Valid() && count < int(100); iterator.Next() {
-		valAddr := sdk.ValAddress(iterator.Value())
+	fmt.Println("******")
+	iterator2 := k.ValidatorsPowerStoreIterator(ctx)
+	defer iterator2.Close()
+	for count := 0; iterator2.Valid() && count < int(100); iterator2.Next() {
+		valAddr := sdk.ValAddress(iterator2.Value())
 		validator := k.mustGetValidator(ctx, valAddr)
 		fmt.Println(validator)
 	}
